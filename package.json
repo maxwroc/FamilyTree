@@ -1,0 +1,24 @@
+{
+  "name": "familytreeplotter",
+  "version": "1.0.0",
+  "description": "JS Family Tree SVG Plotter Library ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxwroc/FamilyTreePlotter.git"
+  },
+  "keywords": [
+    "family-tree",
+    "family",
+    "tree"
+  ],
+  "author": "Max Chodorowski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maxwroc/FamilyTreePlotter/issues"
+  },
+  "homepage": "https://github.com/maxwroc/FamilyTreePlotter#readme"
+}

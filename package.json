@@ -4,7 +4,8 @@
   "description": "JS Family Tree SVG Plotter Library ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -w -p tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,11 @@
   "bugs": {
     "url": "https://github.com/maxwroc/FamilyTreePlotter/issues"
   },
-  "homepage": "https://github.com/maxwroc/FamilyTreePlotter#readme"
+  "homepage": "https://github.com/maxwroc/FamilyTreePlotter#readme",
+  "devDependencies": {
+    "@types/d3": "^3.5.42",
+    "@types/d3-selection-multi": "^1.0.7",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {}
 }

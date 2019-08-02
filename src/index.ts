@@ -1,10 +1,25 @@
 
 module FamilyTreePlotter {
+
     enum Relation {
         Partner,
         Parent,
         Child,
         Sibling
+    }
+
+    enum Sex {
+        Male = "m",
+        Female = "f"
+    }
+
+    interface IRelative {
+        person: Person,
+        relation: Relation
+    }
+
+    interface IInitializedPeople {
+        [id: number]: Person
     }
 
     class Canvas {
@@ -44,12 +59,12 @@ module FamilyTreePlotter {
         public x: number;
         public y: number;
 
+        public isDrawn: boolean = false;
+
         public relatives = {
-            mother: null,
-            father: null,
             children: [],
             partners: []
-        };
+        } as { mother?: Person, father?: Person, children: Person[] };
 
         public connectionLine?: d3.Selection<"g">;;
 
@@ -61,11 +76,11 @@ module FamilyTreePlotter {
             siblingSpace: 60,
             cornerRadious: 20,
             colors: {
-                man: {
+                m: {
                     background: "rgb(159, 213, 235)",
                     stroke: "rgb(142, 191, 211)"
                 },
-                woman: {
+                f: {
                     background: "rgb(245, 184, 219)",
                     stroke: "rgb(214, 161, 191)"
                 }
@@ -76,16 +91,31 @@ module FamilyTreePlotter {
             womenStrokeColor: "rgb(214, 161, 191)"
         }
 
-        constructor(relative?: Person, relation?: Relation, isWoman = false) {
+        constructor(private data: IPersonData, private people: IInitializedPeople) {
             this.x = 100;
             this.y = 100;
-
-            this.setCoords(relative, relation);
-            this.drawBox(isWoman);
         }
 
-        private drawBox(isWoman: boolean) {
-            let colors = Person.props.colors[isWoman ? "woman" : "man"];
+        public setRelatives() {
+            if (this.data.father) {
+                this.relatives.father = this.people[this.data.father];
+                this.relatives.father.relatives.children.push(this);
+            }
+
+            if (this.data.mother) {
+                this.relatives.mother =  this.people[this.data.mother];
+                this.relatives.mother.relatives.children.push(this);
+            }
+        }
+
+        public draw() {
+            this.setCoords();
+            this.drawBox();
+            this.isDrawn = true;
+        }
+
+        private drawBox(sex: Sex) {
+            let colors = Person.props.colors[sex];
             Person.canvas.container.append('rect')
                 .attr("x", this.x)
                 .attr("y", this.y)
@@ -98,26 +128,30 @@ module FamilyTreePlotter {
                 .attr("stroke", colors.stroke);
         }
 
-        private setCoords(relative?: Person, relation?: Relation) {
+        private setCoords() {
+            if (this.relatives.father) {
+                let siblings = this.relatives.father.relatives.children;
+                let siblingsRowWidth = siblings.length * Person.props.width + Person.props.siblingSpace * (siblings.length - 1);
 
-            if (relative) {
-                switch (relation) {
-                    case Relation.Sibling:
-                        this.x = relative.x + Person.props.width + Person.props.siblingSpace;
-                        this.y = relative.y;
-                        break;
-                }
 
-                this.connectWith(relative, relation);
             }
         }
 
-        private connectWith(relative: Person, relation?: Relation) {
+        private connectRelatives(relative: IRelative) {
 
-            let relTopCenter = relative.x + Person.props.width / 2;
-            var path = new Path(relTopCenter, relative.y).arcTo(30, -30, 30, 30).lineTo(this.x + Person.props.width / 2 - 30, null, false).arcTo(30, 30, 30, 30).getPath();
+            let path: string = "";
 
-            this.connectionLine = relative.connectionLine = Person.canvas.container.append("path")
+            switch (relative.relation) {
+                case Relation.Sibling:
+                    let relTopCenter = relative.person.x + Person.props.width / 2;
+                    path = new Path(relTopCenter, relative.person.y).arcTo(30, -30, 30, 30).lineTo(this.x + Person.props.width / 2 - 30, null, false).arcTo(30, 30, 30, 30).getPath();
+                    break;
+                case Relation.Child:
+                    //path = new Path(relTopCenter, relative.person.y).arcTo(30, -30, 30, 30).lineTo(this.x + Person.props.width / 2 - 30, null, false).arcTo(30, 30, 30, 30).getPath();
+                    break;
+            }
+
+            this.connectionLine = relative.person.connectionLine = Person.canvas.container.append("path")
                 .attr("d", path)
                 .attr("stroke", "#000")
                 .attr("stroke-width", 1)
@@ -196,12 +230,14 @@ module FamilyTreePlotter {
     window.addEventListener("load", () => {
         Person.canvas = new Canvas("body");
 
-        let me = new Person();
-        let sister = new Person(me, Relation.Sibling, true);
-        let parent = new Person(me, Relation.Parent, true);
+        let me = new Person(Sex.Male);
+        let sister = new Person(Sex.Female, { person: me, relation: Relation.Sibling });
+        let parent = new Person(Sex.Female, { person: me, relation: Relation.Parent });
 
         // convert db
         let assocData = data.reduce((acc, curr) => { acc[curr.id] = curr; return acc; }, {} as { [key: number]: IPersonData });
+
+        // find root
     });
 
 

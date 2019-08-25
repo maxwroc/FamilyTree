@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "system",
         "target": "es6",
         "sourceMap": false,
         "strict": true,
@@ -8,7 +8,7 @@
         "noImplicitReturns": true,
         "noUnusedLocals": false,
         "rootDir": "src/",
-        "outDir": "dist/"
+        "outFile": "dist/familytree-plotter.js"
     },
     "compileOnSave": true
 }

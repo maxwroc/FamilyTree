@@ -35,7 +35,7 @@ module FamilyTreePlotter {
 
         let mainPersonId = 1;
         let painter = new Painter(new Canvas("body"), people);
-        painter.draw(people[mainPersonId]);
+        painter.drawTree(people[mainPersonId]);
     });
 
 

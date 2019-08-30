@@ -221,20 +221,22 @@ module FamilyTreePlotter {
 
             switch (relative.relation) {
                 case Relation.Sibling:
-                    let relTopCenter = relative.person.x + props.width / 2;
-                    path = new Path(relTopCenter, relative.person.y).arcTo(30, -30, 30, 30).lineTo(this.x + props.width / 2 - 30, null, false).arcTo(30, 30, 30, 30).getPath();
+                    //let relTopCenter = relative.person.x + props.width / 2;
+                    //path = new Path(relTopCenter, relative.person.y).arcTo(30, -30, 30, 30).lineTo(this.x + props.width / 2 - 30, null, false).arcTo(30, 30, 30, 30).getPath();
                     break;
                 case Relation.Child:
                     //path = new Path(relTopCenter, relative.person.y).arcTo(30, -30, 30, 30).lineTo(this.x + Person.props.width / 2 - 30, null, false).arcTo(30, 30, 30, 30).getPath();
                     break;
             }
 
+            /*
             this.connectionLine = relative.person.connectionLine = Person.canvas.container.append("path")
                 .attr("d", path)
                 .attr("stroke", "#000")
                 .attr("stroke-width", 1)
                 .attr("stroke-opacity", 0.3)
                 .attr("fill", "none");
+            /** */
         }
     }
 
